@@ -41,6 +41,19 @@ server.get("/api/users", (request, response) => {
 })
 
 //GET - get user BY ID
+server.get("/api/users/:id", (request, response) => {
+    const { id } = request.params
+    // const user = db.findById(userObj => userObj.id === request.params.id)
 
+    db.findById(id).then(user => {
+        if (user) {
+            response.status(200).json(user);
+        } else {
+            response.status(404).json({ message: "The user with the specified ID does not exist." })
+        }
+    }).catch(error => {
+        response.status(500).json({ errorMessage: "The user information could not be retrieved." })
+    })
+})
 
 server.listen(9000, () => console.log('the server is alive'))
