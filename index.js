@@ -53,6 +53,7 @@ server.get("/api/users/:id", (request, response) => {
     })
 })
 
+// DELETE - by user ID
 server.delete("/api/users/:id", (request, response) => {
     const { id } = request.params
 
@@ -68,4 +69,21 @@ server.delete("/api/users/:id", (request, response) => {
         response.status(500).json({ errorMessage: "The user could not be removed" })
     })
 })
+
+// PUT -  by user ID
+server.put("/api/users/:id", (request, response) => {
+    const { id } = request.params
+    const changes = request.body;
+    db.update(id, changes)
+        .then(user => {
+            if (user) {
+                response.status(200).json(user, { message: `The user with the specified ID: ${user} does not exist.` })
+            } else {
+                response.status(404).json({ errorMessage: "Please provide name and bio for the user." })
+            }
+        })
+        .catch(err => {
+            response.status(500).json({ errorMessage: "The user information could not be modified." })
+        });
+});
 server.listen(9000, () => console.log('the server is alive'))
